@@ -1,18 +1,25 @@
 package io.hhplus.tdd.point;
 
+import io.hhplus.tdd.database.PointHistoryTable;
 import io.hhplus.tdd.database.UserPointTable;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.groups.Tuple.tuple;
 
 @SpringBootTest
 class UserPointServiceTest {
 
     @Autowired
     private UserPointTable userPointTable;
+
+    @Autowired
+    private PointHistoryTable pointHistoryTable;
 
     @Autowired
     private UserPointService userPointService;
@@ -62,5 +69,24 @@ class UserPointServiceTest {
 
         // then
         assertThat(result.point()).isEqualTo(50);
+    }
+
+    @DisplayName("유저의 포인트 충전/사용 내역을 조회한다.")
+    @Test
+    void getPointHistories() {
+        // given
+        pointHistoryTable.insert(1L, 200, TransactionType.CHARGE, System.currentTimeMillis());
+        pointHistoryTable.insert(1L, 100, TransactionType.USE, System.currentTimeMillis());
+
+        // when
+        List<PointHistory> pointHistories = userPointService.getPointHistories(1L);
+
+        // then
+        assertThat(pointHistories).hasSize(2)
+                .extracting("id", "amount", "type")
+                .containsExactly(
+                        tuple(1L, 200L, TransactionType.CHARGE),
+                        tuple(2L, 100L, TransactionType.USE)
+                );
     }
 }
