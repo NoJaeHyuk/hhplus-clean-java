@@ -33,4 +33,20 @@ class UserPointServiceTest {
         // then
         assertThat(chargedPoint.point()).isEqualTo(300);
     }
+
+    @DisplayName("유저의 식별자 값으로 UserPoint 정보를 조회한다.")
+    @Test
+    void getUserPointById() {
+        // given
+        UserPoint userPoint = new UserPoint(1L, 100, System.currentTimeMillis());
+        userPointTable.insertOrUpdate(userPoint.id(), userPoint.point());
+
+        // when
+        UserPoint result = userPointService.getUserPointById(1L);
+
+        // then
+        assertThat(result.id()).isNotNull();
+        assertThat(result).extracting("id", "point")
+                .containsExactlyInAnyOrder(1L, 100L);
+    }
 }

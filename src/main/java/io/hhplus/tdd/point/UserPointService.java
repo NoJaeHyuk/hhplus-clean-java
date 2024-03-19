@@ -15,4 +15,8 @@ public class UserPointService {
         UserPoint updatedPoint = userPoint.addPoint(amount);
         return userPointTable.insertOrUpdate(userPoint.id(), updatedPoint.point());
     }
+
+    public UserPoint getUserPointById(long id) {
+        return userPointTable.selectById(id);
+    }
 }
