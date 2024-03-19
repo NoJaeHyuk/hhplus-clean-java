@@ -33,8 +33,7 @@ public class PointController {
     public List<PointHistory> history(
             @PathVariable long id
     ) {
-        List<PointHistory> pointHistories = userPointService.getPointHistories(id);
-        return List.of();
+        return userPointService.getPointHistories(id);
     }
 
     /**

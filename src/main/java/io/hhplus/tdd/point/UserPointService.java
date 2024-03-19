@@ -15,8 +15,11 @@ public class UserPointService {
     private final PointHistoryTable pointHistoryTable;
 
     public UserPoint chargePoint(long id, long amount) {
+        pointHistoryTable.insert(id, amount, TransactionType.CHARGE, System.currentTimeMillis());
+
         UserPoint userPoint = userPointTable.selectById(id);
         UserPoint updatedPoint = userPoint.addPoint(amount);
+
         return userPointTable.insertOrUpdate(userPoint.id(), updatedPoint.point());
     }
 
@@ -25,8 +28,11 @@ public class UserPointService {
     }
 
     public UserPoint usePoint(long id, long amount) {
+        pointHistoryTable.insert(id, amount, TransactionType.USE, System.currentTimeMillis());
+
         UserPoint userPoint = userPointTable.selectById(id);
         UserPoint updatedPoint = userPoint.usePoint(amount);
+
         return userPointTable.insertOrUpdate(userPoint.id(), updatedPoint.point());
     }
 
