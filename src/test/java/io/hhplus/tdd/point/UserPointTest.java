@@ -51,5 +51,47 @@ class UserPointTest {
         }
     }
 
+    @Nested
+    @DisplayName("usePoint()는 ")
+    class usePoint {
+
+        @DisplayName("사용자의 포인트가 사용한 포인트 만큼 감소한다.")
+        @Test
+        void will_success() {
+            // given
+            UserPoint userPoint = new UserPoint(1L, 500, System.currentTimeMillis());
+
+            // when
+            UserPoint result = userPoint.usePoint(100);
+
+            // then
+            assertThat(result.point()).isEqualTo(400);
+        }
+
+        @DisplayName("사용 포인트가 양수값이 아닌 경우 예외를 발생시킨다.")
+        @Test
+        void fail_양수값이_아닌경우() {
+            // given
+            UserPoint userPoint = new UserPoint(1L, 500, System.currentTimeMillis());
+
+            // when then
+            assertThatThrownBy(() -> userPoint.usePoint(0))
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessage("포인트값은 양수여야 합니다.");
+        }
+
+        @DisplayName("사용 포인트가 기존 포인트보다 초과할 경우 예외를 발생시킨다.")
+        @Test
+        void fail_사용포인트_초과경우() {
+            // given
+            UserPoint userPoint = new UserPoint(1L, 500, System.currentTimeMillis());
+
+            // when then
+            assertThatThrownBy(() -> userPoint.usePoint(501))
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessage("사용 포인트가 기존 포인트보다 클 수 없습니다.");
+        }
+    }
+
 
 }

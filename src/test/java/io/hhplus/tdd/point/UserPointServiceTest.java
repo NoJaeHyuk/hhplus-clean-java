@@ -49,4 +49,18 @@ class UserPointServiceTest {
         assertThat(result).extracting("id", "point")
                 .containsExactlyInAnyOrder(1L, 100L);
     }
+
+    @DisplayName("유저에 대한 포인트를 사용한다.")
+    @Test
+    void usePoint() {
+        // given
+        UserPoint userPoint = new UserPoint(1L, 100, System.currentTimeMillis());
+        userPointTable.insertOrUpdate(userPoint.id(), userPoint.point());
+
+        // when
+        UserPoint result = userPointService.usePoint(userPoint.id(), 50);
+
+        // then
+        assertThat(result.point()).isEqualTo(50);
+    }
 }
