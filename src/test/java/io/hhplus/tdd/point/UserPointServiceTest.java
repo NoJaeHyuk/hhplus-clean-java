@@ -12,6 +12,12 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
 
+/**
+ * Service 로직에 대한 테스트는 통합 테스트 관점에서 진행하였습니다.
+ * 그래서 스프링컨테이너를 띄우기 위해 @SpringBootTest를 사용하였습니다.
+ * 왜 통합테스트라서 명칭했냐면 한가지 이상의 레이어를 진행하기 때문입니다.
+ * Repository 부분을 mock 처리하기도 하는데 로직 자체가 간단하여 @SpringBootTest를 이용해도 큰 문제 없다고 생각했습니다.
+ */
 @SpringBootTest
 class UserPointServiceTest {
 

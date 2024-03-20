@@ -7,6 +7,11 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+/**
+ * 객체에 대한 단위 테스트입니다.
+ * 아직 객체지향적인 코드 작성에 익숙하지 않아
+ * 샘플코드에 있는 레코드 클래스를 객체라 생각하고 작성하였습니다.
+ */
 @DisplayName("UserPoint 테스트")
 class UserPointTest {
 
