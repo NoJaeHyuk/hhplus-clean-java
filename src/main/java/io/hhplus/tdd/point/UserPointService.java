@@ -14,7 +14,7 @@ public class UserPointService {
     private final UserPointTable userPointTable;
     private final PointHistoryTable pointHistoryTable;
 
-    public UserPoint chargePoint(long id, long amount) {
+    public synchronized UserPoint chargePoint(long id, long amount) {
         pointHistoryTable.insert(id, amount, TransactionType.CHARGE, System.currentTimeMillis());
 
         UserPoint userPoint = userPointTable.selectById(id);
@@ -27,7 +27,7 @@ public class UserPointService {
         return userPointTable.selectById(id);
     }
 
-    public UserPoint usePoint(long id, long amount) {
+    public synchronized UserPoint usePoint(long id, long amount) {
         pointHistoryTable.insert(id, amount, TransactionType.USE, System.currentTimeMillis());
 
         UserPoint userPoint = userPointTable.selectById(id);

@@ -3,11 +3,16 @@ package io.hhplus.tdd.point;
 import io.hhplus.tdd.database.PointHistoryTable;
 import io.hhplus.tdd.database.UserPointTable;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
@@ -94,5 +99,87 @@ class UserPointServiceTest {
                         tuple(1L, 200L, TransactionType.CHARGE),
                         tuple(2L, 100L, TransactionType.USE)
                 );
+    }
+
+    @Nested
+    @DisplayName("포인트 충전, 사용에 대한 동시성 테스트")
+    class 동시성테스트 {
+        @DisplayName("포인트 충전에 대한 동시성 테스트")
+        @Test
+        void 충전_대한_동시성() throws InterruptedException {
+            // given
+            ExecutorService executorService = Executors.newFixedThreadPool(30);
+            CountDownLatch latch = new CountDownLatch(100);
+
+            AtomicInteger successCount = new AtomicInteger();
+            AtomicInteger failedCount = new AtomicInteger();
+
+            final long userId = 1; // 특정 사용자 ID
+            final long amount = 100; // 충전 및 사용할 포인트 양
+
+            // when
+            for (int i = 0; i < 100; i++) {
+                executorService.submit(() -> {
+                    try {
+                        userPointService.chargePoint(userId, amount);
+                        successCount.incrementAndGet();
+                    } catch (Exception e) {
+                        System.err.println("Error occurred for User " + userId + " during usage: " + e.getMessage());
+                        failedCount.incrementAndGet();
+                    } finally {
+                        latch.countDown();
+                    }
+                });
+            }
+
+            latch.await();
+
+            // then
+            System.out.println("success count : " + successCount.get());
+            System.out.println("failed count : " + failedCount.get());
+
+            List<PointHistory> pointHistories = userPointService.getPointHistories(1L);
+            assertThat(pointHistories).hasSize(100);
+        }
+
+        @DisplayName("포인트 사용에 대한 동시성 테스트")
+        @Test
+        void 사용_대한_동시성() throws InterruptedException {
+            // given
+            ExecutorService executorService = Executors.newFixedThreadPool(30);
+            CountDownLatch latch = new CountDownLatch(100);
+
+            AtomicInteger successCount = new AtomicInteger();
+            AtomicInteger failedCount = new AtomicInteger();
+
+            final long userId = 1; // 특정 사용자 ID
+            final long amount = 100; // 충전 및 사용할 포인트 양
+
+            userPointTable.insertOrUpdate(userId, 10000);
+
+            // when
+            for (int i = 0; i < 100; i++) {
+                executorService.submit(() -> {
+                    try {
+                        userPointService.usePoint(userId, amount);
+                        successCount.incrementAndGet();
+                    } catch (Exception e) {
+                        System.err.println("Error occurred for User " + userId + " during usage: " + e.getMessage());
+                        failedCount.incrementAndGet();
+                    } finally {
+                        latch.countDown();
+                    }
+                });
+            }
+
+            latch.await();
+
+            // then
+            System.out.println("success count : " + successCount.get());
+            System.out.println("failed count : " + failedCount.get());
+
+            List<PointHistory> pointHistories = userPointService.getPointHistories(1L);
+            assertThat(pointHistories).hasSize(100);
+        }
     }
 }
