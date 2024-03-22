@@ -5,7 +5,7 @@ public record UserPoint(
         long point,
         long updateMillis
 ) {
-    private static final long MAX_POINT = 1000;
+    private static final long MAX_POINT = 10000000;
 
     public UserPoint addPoint(long amount) {
         if (amount <= 0) {
