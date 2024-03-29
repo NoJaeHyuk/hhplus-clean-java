@@ -139,4 +139,21 @@ class LectureServiceTest {
     }
 
 
+    @DisplayName("특정 유저가 신청한 특정 특강의 정보를 조회한다.")
+    @Test
+    void getApplicant() {
+        // given
+        Long userId = 1L;
+        Long lectureId = 1L;
+
+        when(applicantRepository.findByLectureIdAndUserId(lectureId, userId)).thenReturn(Optional.of(Applicant.builder().build()));
+
+        // when
+        Applicant applicant = lectureService.getApplicant(lectureId, userId);
+
+        // then
+        assertThat(applicant).isNotNull();
+    }
+
+
 }

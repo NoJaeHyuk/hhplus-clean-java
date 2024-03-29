@@ -34,10 +34,13 @@ public class LectureController {
      * @return
      */
     @GetMapping("/lectures/{id}")
-    public String lecture(
+    public ResponseEntity<LectureResponse> getApplicant(
             @PathVariable long id,
             @RequestParam Long userId
     ) {
+
+        Applicant applicant = lectureService.getApplicant(id, userId);
+
         return null;
     }
 }

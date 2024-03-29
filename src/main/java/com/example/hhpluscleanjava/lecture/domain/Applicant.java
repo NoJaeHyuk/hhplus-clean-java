@@ -11,6 +11,9 @@ import static com.example.hhpluscleanjava.lecture.domain.LectureStatus.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(
+        uniqueConstraints = {@UniqueConstraint(name = "UniqueUserAndLecture",columnNames = {"userId", "lecture_id"})}
+)
 public class Applicant {
 
     @Id

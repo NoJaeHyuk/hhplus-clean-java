@@ -39,4 +39,8 @@ public class Lecture {
     public boolean isCapacityExceeded(int maxCount) {
         return this.capacityCount >= maxCount;
     }
+
+    public void addCapacityCount() {
+        this.capacityCount += 1;
+    }
 }

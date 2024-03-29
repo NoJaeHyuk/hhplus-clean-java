@@ -6,6 +6,8 @@ import com.example.hhpluscleanjava.lecture.service.ApplicantRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 @RequiredArgsConstructor
 public class ApplicantRepositoryImpl implements ApplicantRepository {
@@ -20,5 +22,10 @@ public class ApplicantRepositoryImpl implements ApplicantRepository {
     @Override
     public Applicant save(Applicant applicant) {
         return applicantJpaRepository.save(applicant);
+    }
+
+    @Override
+    public Optional<Applicant> findByLectureIdAndUserId(Long lectureId, Long userId) {
+        return applicantJpaRepository.findByLectureIdAndUserId(lectureId, userId);
     }
 }
