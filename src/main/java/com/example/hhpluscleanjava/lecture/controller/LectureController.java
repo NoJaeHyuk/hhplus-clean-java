@@ -38,9 +38,7 @@ public class LectureController {
             @PathVariable long id,
             @RequestParam Long userId
     ) {
-
         Applicant applicant = lectureService.getApplicant(id, userId);
-
-        return null;
+        return ResponseEntity.ok(LectureResponse.from(applicant));
     }
 }
