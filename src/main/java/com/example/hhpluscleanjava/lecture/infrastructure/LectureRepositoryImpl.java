@@ -15,6 +15,11 @@ public class LectureRepositoryImpl implements LectureRepository {
 
     @Override
     public Optional<Lecture> findById(Long lectureId) {
-        return lectureJpaRepository.findById(lectureId);
+        return lectureJpaRepository.findByIdWithPessimisticLock(lectureId);
+    }
+
+    @Override
+    public Lecture save(Lecture lecture) {
+        return lectureJpaRepository.save(lecture);
     }
 }

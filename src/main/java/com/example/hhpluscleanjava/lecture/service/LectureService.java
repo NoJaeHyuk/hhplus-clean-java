@@ -3,7 +3,9 @@ package com.example.hhpluscleanjava.lecture.service;
 import com.example.hhpluscleanjava.lecture.controller.dto.request.LectureRequest;
 import com.example.hhpluscleanjava.lecture.domain.Applicant;
 import com.example.hhpluscleanjava.lecture.domain.Lecture;
+import jakarta.persistence.LockModeType;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
