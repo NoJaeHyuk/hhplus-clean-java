@@ -5,6 +5,8 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.ZonedDateTime;
 
@@ -23,6 +25,14 @@ public class Lecture {
     private int capacityCount;
 
     private ZonedDateTime openDate;
+
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, insertable = true, updatable = false)
+    private ZonedDateTime createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at", nullable = true, insertable = true, updatable = true)
+    private ZonedDateTime updatedAt = null;
 
     @Builder
     private Lecture(Long id, String title, int capacityCount, ZonedDateTime openDate) {

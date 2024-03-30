@@ -5,6 +5,10 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.ZonedDateTime;
 
 import static com.example.hhpluscleanjava.lecture.domain.LectureStatus.*;
 
@@ -30,6 +34,14 @@ public class Applicant {
 
     @Enumerated(value = EnumType.STRING)
     private LectureStatus status;
+
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, insertable = true, updatable = false)
+    private ZonedDateTime createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at", nullable = true, insertable = true, updatable = true)
+    private ZonedDateTime updatedAt = null;
 
     @Builder
     private Applicant(Long id, Long userId, Lecture lecture, LectureStatus status) {
